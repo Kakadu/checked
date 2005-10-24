@@ -4,52 +4,27 @@ if test $# = 0; then
     echo "usage: $0 <file prefix>"
     exit 1
 fi
+      
+FILE=`basename $1`
 
-TEST=$1
+if [ ! -x $FILE ]; then
+    echo "File $FILE does not exist or not executable"
+    exit -1
+fi
+
+./$FILE > $FILE.log
+
 ERROR=0
-
-if test "$YARD" = ""; then
-    echo "Don't know how to run yard. Set the \$YARD variable."
-    exit 1
+if ! diff -u orig/$FILE.log $FILE.log > $FILE.diff; then
+    echo "$FILE: FAILED (see $FILE.diff)"
+    ERROR=$(($ERROR + 1))
+else
+    rm -f $FILE.diff
 fi
 
-RUN="${YARD}"
-ARGS="-gen combi ${TEST}.yrd -o ${TEST}"
-CHECKS="${TEST}.ml ${TEST}TokenKind.ml"
-
-for i in ${RUN}; do
-    if [ ! -x ${i} ]; then
-	echo "File ${i} does not exist or not executable"
-	ERROR=$((${ERROR} + 1))
-    fi
-done
-
-if [ ${ERROR} -gt 0 ]; then
-    exit ${ERROR}
-fi
-
-OLDPATH=${PATH}
-PATH=.:${PATH}
-
-for i in ${RUN}; do
-    log=`basename ${i}`
-    ${i} ${ARGS} > ${log}.log
-done
-
-PATH=${OLDPATH}
-
-for i in ${CHECKS}; do
-    if ! diff -u orig/${i} ${i} > ${i}.diff; then
-	echo "${TEST}: FAILED (see ${i}.diff)"
-	ERROR=$((${ERROR} + 1))
-    else
-	rm -f ${i}.diff
-    fi
-done
-
-if [ ${ERROR} -eq 0 ]; then
-    #echo "${TEST}: passed"
+if [ $ERROR -eq 0 ]; then
+    #echo "$FILE: passed"
     exit 0
 else
-    exit ${ERROR}
+    exit $ERROR
 fi

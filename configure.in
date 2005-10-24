@@ -33,6 +33,9 @@ dnl usage:
 dnl module name, file name to use with "#load",
 dnl first dir <space> second dir <space> etc.
 AC_CHECK_CAMLP4_MODULE(logger, pa_log.cmo, +camlp4 ../logger)
+AC_CHECK_CAMLP4_MODULE(Pr_o, pr_o.cmo, +camlp4)
+AC_CHECK_CAMLP4_MODULE(q_MLast, q_MLast.cmo, +camlp4)
+AC_SUBST(PARSER_INCLUDES)
 dnl use empty check just for @PARSER_INCLUDES@ substitution
 
 dnl check for compiler module

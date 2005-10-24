@@ -48,8 +48,7 @@ DOCFILES = $(PACKAGE).ps $(PACKAGE).html
 TARGET := $(MLI) $(CMA) $(CMXA) $(CMO) $(CMI) $(LIB) META
 
 # OCaml parser flags
-#P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pa_log.cmo $(LOG)"
-#P4FLAGS = -pp "$(CAMLP4R) $(PARSER_INCLUDES)"
+P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pa_log.cmo $(LOG)"
 
 # how to run yard
 YARD := ocamlrun saved/yard

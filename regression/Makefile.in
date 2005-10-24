@@ -10,6 +10,8 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+# OCaml parser flags
+
 
 SHELL = @SHELL@
 
@@ -57,19 +59,14 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = @host_alias@
-host_triplet = @host@
 CAMLP4 = @CAMLP4@
 CAMLP4O = @CAMLP4O@
 CAMLP4R = @CAMLP4R@
-CC = @CC@
 CFLAGS = @CFLAGS@
 DEBUG = @DEBUG@
 EXEEXT = @EXEEXT@
-HAVE_LIB = @HAVE_LIB@
-LIB = @LIB@
+EXTRA_CMA = @EXTRA_CMA@
 LOG = @LOG@
-LTLIB = @LTLIB@
 MAKEINFO = @MAKEINFO@
 MODULE_INCLUDES = @MODULE_INCLUDES@
 OBJEXT = @OBJEXT@
@@ -107,12 +104,14 @@ have_ocamlopt = @have_ocamlopt@
 have_ocamloptdotopt = @have_ocamloptdotopt@
 have_ocamlyacc = @have_ocamlyacc@
 
+P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo pa_log.cmo $(LOG)"
+
+# bytcode compiling flags
+BFLAGS = -w p $(MODULE_INCLUDES) $(P4FLAGS) $(DEBUG)
+
 TESTS = test001
 
 TESTS_ENVIRONMENT = ./test.sh
-
-BFLAGS = -w p -I ..
-EXTRA_CMA = str.cma ../common.cma
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 DIST_COMMON =  Makefile.am Makefile.in
@@ -120,7 +119,7 @@ DIST_COMMON =  Makefile.am Makefile.in
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
+TAR = tar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
@@ -247,10 +246,10 @@ clean-am:
 	rm -f *.log
 
 $(TESTS): $(addsuffix .cmo, $(TESTS))
-	$(OCAMLC) $(BFLAGS) -o $@ $(EXTRA_CMA) $<
+	$(OCAMLC) $(BFLAGS) -o $@ $(EXTRA_CMA) ../checked.cma $<
 
 %.cmo: %.ml
-	$(OCAMLC) -c $(BFLAGS) $<
+	$(OCAMLC) -c -I .. $(BFLAGS) $<
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
