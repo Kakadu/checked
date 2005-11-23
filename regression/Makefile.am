@@ -1,19 +1,23 @@
-# OCaml parser flags
-P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo pa_log.cmo $(LOG)"
-
-# bytcode compiling flags
-BFLAGS = -w p $(MODULE_INCLUDES) $(P4FLAGS) $(DEBUG)
-
 TESTS = test001
 
 TESTS_ENVIRONMENT = ./test.sh
 
+#PARSER_INCLUDES += -I $(top_srcdir)/src
+MODULE_INCLUDES += -I $(top_srcdir)/src
+
+# OCaml parser call with flags
+AM_P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo pa_log.cmo $(LOG)"
+#AM_P4FLAGS = -pp "$(CAMLP4R) $(PARSER_INCLUDES)"
+
+# bytecode compiling flags
+AM_BFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
+# native (optimized) compiling flags
+AM_OFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
+
 clean-am:
-	rm -f $(addsuffix .cmo, $(TESTS)) $(addsuffix .cmi, $(TESTS))
-	rm -f *.log
+	rm -f $(addsuffix .cmi, $(TESTS)) $(addsuffix .cmo, $(TESTS))
+	rm -f $(addsuffix $(EXEEXT), $(TESTS))
+	rm -f *.diff *.log
 
-$(TESTS): $(addsuffix .cmo, $(TESTS))
-	$(OCAMLC) $(BFLAGS) -o $@ $(EXTRA_CMA) ../checked.cma $<
-
-%.cmo: %.ml
-	$(OCAMLC) -c -I .. $(BFLAGS) $<
+test001: test001.ml
+	$(OCAMLC) $(BFLAGS) $(P4FLAGS) $(EXTRA_CMA) $(PACKAGE).cma -o $@$(EXEEXT) $<
