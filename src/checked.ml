@@ -37,42 +37,50 @@ module Viewer (A : View.Viewable) (B : View.Viewable) =
 
   end
 
+let unit x = Ok x
+
+let bind x f = 
+  match x with
+  | Ok   x -> f x
+  | Fail y -> Fail y
+
 let map f value = 
-    match value with
-    | Ok   x -> Ok (f x)
-    | Fail x -> Fail x
+  match value with
+  | Ok   x -> Ok (f x)
+  | Fail x -> Fail x
 
-let join f value =
-    match value with
-    | Ok   x -> f x
-    | Fail x -> Fail x
+let ( !! ) = unit
 
-let (@>)  = map
-let (@@>) = join
+let ( -?->> ) = bind
+let ( -?-> ) x y = map y x
 
-let mapList values =
-    let msgs, values = List.fold_left (fun (msgs, acc) value ->
-       match value with
-       | Ok   x   -> msgs, x :: acc
-       | Fail msg -> msg @ msgs, acc
+let array values =     
+  let msgs, values, f = 
+    Array.fold_left 
+      (fun (msgs, acc, f) value ->
+	match value with
+	| Ok   x   -> msgs, x :: acc, f
+	| Fail msg -> msg @ msgs, acc, false
       )
-      ([], [])
+      ([], [], true)
       values
-    in
-    match msgs with
-    | [] -> Ok (List.rev values)
-    | _  -> Fail (List.rev msgs)
-      
-let mapArray values =     
-    let msgs, values = Array.fold_left (fun (msgs, acc) value ->
-       match value with
-       | Ok   x   -> msgs, x :: acc
-       | Fail msg -> msg @ msgs, acc
+  in
+  if f then Ok (Array.of_list (List.rev values)) else Fail (List.rev msgs)
+
+let ( ?|| ) = array
+
+let list values =
+  let msgs, values, f = 
+    List.fold_left 
+      (fun (msgs, acc, f) value ->
+	match value with
+	| Ok   x   -> msgs, x :: acc, f
+	| Fail msg -> msg @ msgs, acc, false
       )
-      ([], [])
+      ([], [], true)
       values
-    in
-    match msgs with
-    | [] -> Ok (Array.of_list (List.rev values))
-    | _  -> Fail (List.rev msgs)
-    
+  in
+  if f then Ok (List.rev values) else Fail (List.rev msgs)
+
+let ( ?| ) = list
+

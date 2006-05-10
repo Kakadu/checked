@@ -31,24 +31,37 @@ type ('a, 'b) t =
 (** Visualization functor *)
 module Viewer (A : View.Viewable) (B : View.Viewable) : View.Viewable with type t = (A.t, B.t) t
 
+(** Unit: [unit x] returns [Ok x] *)
+val unit : 'a -> ('a, 'b) t
+
+(** Conventional monadic [bind]. Example:  [bind (map (fun x -> x+1) (Ok 2)) (fun y -> y+3)] 
+    returns [Ok 6] *)
+val bind : ('a, 'c) t -> ('a -> ('b, 'c) t) -> ('b, 'c) t
+
 (** If [x] is [Ok s], then [map f x] returns [Ok (f s)], otherwise [x] is returned.
     Example: [map (fun x -> x+1) (Ok 2)] returns [Ok 3], [map (fun x -> x+1) (Fail ["overflow"])] 
-    returns [Fail ["overflow"]] *)
-val map  : ('a -> 'b) -> ('a, 'c) t -> ('b, 'c) t
+    returns [Fail ["overflow"]] 
+*)
+val map : ('a -> 'b) -> ('a, 'c) t -> ('b, 'c) t
 
-(** The same with the exception that [f] itself returns checked value. Example:
-    [join (fun y -> y+3) (map (fun x -> x+1) (Ok 2))] returns [Ok 6] *)
-val join : ('a -> ('b, 'c) t) -> ('a, 'c) t -> ('b, 'c) t
+(** Prefix synonym for [unit] *)
+val ( !! ) : 'a -> ('a, 'b) t
 
-(** Infix synonim fom [map] *)
-val (@>)  : ('a -> 'b) -> ('a, 'c) t -> ('b, 'c) t
+(** Infix synonym for [bind] *)
+val ( -?->> ) : ('a, 'c) t -> ('a -> ('b, 'c) t) -> ('b, 'c) t
 
-(** Infix synonim for join *)
-val (@@>) : ('a -> ('b, 'c) t) -> ('a, 'c) t -> ('b, 'c) t
+(** Infix synonym for [map]. Note: the order of parameters is inverted. *)
+val ( -?-> ) : ('a, 'c) t -> ('a -> 'b) -> ('b, 'c) t
 
-(** Carry checked condition out of the list. [mapList [Ok x; Ok y; Ok y]] is [Ok[x; y; z]] 
-while [mapList [Fail a; Ok b; Fail c]] is [Fail (a @ c)] *)
-val mapList : ('a, 'b) t list -> ('a list, 'b) t
+(** Carry checked condition out of the list. [list [Ok x; Ok y; Ok y]] is [Ok[x; y; z]] 
+    while [list [Fail a; Ok b; Fail c]] is [Fail (a @ c)] *)
+val list : ('a, 'b) t list -> ('a list, 'b) t
 
-(** Carry checked condition out of the array. See [mapList] for details *)
-val mapArray : ('a, 'b) t array -> ('a array, 'b) t
+(** Carry checked condition out of the array. See [list] for details *)
+val array : ('a, 'b) t array -> ('a array, 'b) t
+
+(** Prefix synonym for [list] *)
+val ( ?| ) : ('a, 'b) t list -> ('a list, 'b) t
+
+(** Prefix synonym for [array] *)
+val ( ?|| ) : ('a, 'b) t array -> ('a array, 'b) t

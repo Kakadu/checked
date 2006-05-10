@@ -1,4 +1,4 @@
-TESTS = test001
+TESTS = test001 test002
 
 TESTS_ENVIRONMENT = $(srcdir)/test.sh
 
@@ -8,7 +8,7 @@ MODULE_INCLUDES += -I $(top_srcdir)/src
 EXTRA_CMA += $(PACKAGE).cma
 
 # OCaml parser call with flags
-AM_P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo pa_log.cmo $(LOG)"
+AM_P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo ../camlp4/pa_checked.cmo pa_log.cmo $(LOG)"
 #AM_P4FLAGS = -pp "$(CAMLP4R) $(PARSER_INCLUDES)"
 
 # bytecode compiling flags
@@ -22,4 +22,7 @@ clean-am:
 	rm -f *.diff *.log
 
 test001: test001.ml
+	$(OCAMLC) $(BFLAGS) $(P4FLAGS) $(EXTRA_CMA) -o $@$(EXEEXT) $<
+
+test002: test002.ml
 	$(OCAMLC) $(BFLAGS) $(P4FLAGS) $(EXTRA_CMA) -o $@$(EXEEXT) $<
