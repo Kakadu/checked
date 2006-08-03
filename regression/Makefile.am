@@ -1,5 +1,7 @@
+# List all tests to run
 TESTS = test001 test002
 
+# Set testing script with optional environment valiables
 TESTS_ENVIRONMENT = $(srcdir)/test.sh
 
 #PARSER_INCLUDES += -I $(top_srcdir)/src
@@ -16,11 +18,13 @@ AM_BFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
 # native (optimized) compiling flags
 AM_OFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
 
+# Clean all generated output
 clean-am:
 	rm -f $(addsuffix .cmi, $(TESTS)) $(addsuffix .cmo, $(TESTS))
 	rm -f $(addsuffix $(EXEEXT), $(TESTS))
 	rm -f *.diff *.log
 
+# Rules to build tests
 test001: test001.ml
 	$(OCAMLC) $(BFLAGS) $(P4FLAGS) $(EXTRA_CMA) -o $@$(EXEEXT) $<
 
