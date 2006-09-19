@@ -1,32 +1,31 @@
-# List all tests to run
 TESTS = test001 test002
 
-# Set testing script with optional environment valiables
 TESTS_ENVIRONMENT = $(srcdir)/test.sh
 
-#PARSER_INCLUDES += -I $(top_srcdir)/src
+include $(top_srcdir)/m4/Makefile.am.vars
+
+PARSER_INCLUDES += -I $(top_srcdir)/camlp4
 MODULE_INCLUDES += -I $(top_srcdir)/src
 
 EXTRA_CMA += $(PACKAGE).cma
 
 # OCaml parser call with flags
-AM_P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo ../camlp4/pa_checked.cmo pa_log.cmo $(LOG)"
-#AM_P4FLAGS = -pp "$(CAMLP4R) $(PARSER_INCLUDES)"
+AM_P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo pa_checked.cmo pa_log.cmo $(LOG)"
 
-# bytecode compiling flags
-AM_BFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
-# native (optimized) compiling flags
-AM_OFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
+TARGET = 
 
-# Clean all generated output
-clean-am:
-	rm -f $(addsuffix .cmi, $(TESTS)) $(addsuffix .cmo, $(TESTS))
-	rm -f $(addsuffix $(EXEEXT), $(TESTS))
-	rm -f *.diff *.log
+CLEAN_EXTRA += $(addsuffix .cmi, $(TESTS)) $(addsuffix .cmo, $(TESTS))
+CLEAN_EXTRA += $(addsuffix $(EXEEXT), $(TESTS))
+CLEAN_EXTRA += *.diff *.log
+
+include $(top_srcdir)/m4/Makefile.am.targets
+
+# do not call ocamldep
+.depend:
+	touch .depend
 
 # Rules to build tests
-test001: test001.ml
-	$(OCAMLC) $(BFLAGS) $(P4FLAGS) $(EXTRA_CMA) -o $@$(EXEEXT) $<
+%: %.ml
+	$(OCAMLC) $(BFLAGS) $(EXTRA_CMA) $(P4FLAGS) -o $@$(EXEEXT) $<
 
-test002: test002.ml
-	$(OCAMLC) $(BFLAGS) $(P4FLAGS) $(EXTRA_CMA) -o $@$(EXEEXT) $<
+include $(top_srcdir)/m4/Makefile.am.rules
