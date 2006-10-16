@@ -84,3 +84,7 @@ let list values =
 
 let ( ?| ) = list
 
+let option = function
+	| None -> Ok None
+	| Some x -> x -?-> (fun t -> Some t)
+

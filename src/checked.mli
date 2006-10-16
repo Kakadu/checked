@@ -60,6 +60,9 @@ val list : ('a, 'b) t list -> ('a list, 'b) t
 (** Carry checked condition out of the array. See [list] for details *)
 val array : ('a, 'b) t array -> ('a array, 'b) t
 
+(** Carry checked condition out of the option *)
+val option: ('a, 'b) t option -> ('a option, 'b) t
+
 (** Prefix synonym for [list] *)
 val ( ?| ) : ('a, 'b) t list -> ('a list, 'b) t
 
