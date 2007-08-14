@@ -1,5 +1,5 @@
 (**************************************************************************
- *  Copyright (C) 2005
+ *  Copyright (C) 2005-2007
  *  Dmitri Boulytchev (db@tepkom.ru), St.Petersburg State University
  *  Universitetskii pr., 28, St.Petersburg, 198504, RUSSIA    
  *
@@ -32,8 +32,8 @@ module Viewer (A : View.Viewable) (B : View.Viewable) =
     open Printf 
 
     let toString = function
-        | Ok x      -> sprintf "(Ok %s)" (A.toString x)
-        | Fail msgs -> sprintf "(Fail [%s])" (let module M = View.List (B) in M.toString msgs)
+      | Ok x      -> sprintf "(Ok %s)" (A.toString x)
+      | Fail msgs -> sprintf "(Fail [%s])" (let module M = View.List (B) in M.toString msgs)
 
   end
 
@@ -85,6 +85,13 @@ let list values =
 let ( ?| ) = list
 
 let option = function
-	| None -> Ok None
-	| Some x -> x -?-> (fun t -> Some t)
+  | None -> Ok None
+  | Some x -> x -?-> (fun t -> Some t)
 
+let yieldWith f = function
+  | Ok x -> x
+  | Fail y -> f y
+
+let yield x c = yieldWith (fun _ -> x) c
+
+let uncheck c = yieldWith (fun _ -> invalid_arg "**uncheck**") c

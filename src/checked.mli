@@ -1,5 +1,5 @@
 (**************************************************************************
- *  Copyright (C) 2005
+ *  Copyright (C) 2005-2007
  *  Dmitri Boulytchev (db@tepkom.ru), St.Petersburg State University
  *  Universitetskii pr., 28, St.Petersburg, 198504, RUSSIA    
  *
@@ -61,7 +61,16 @@ val list : ('a, 'b) t list -> ('a list, 'b) t
 val array : ('a, 'b) t array -> ('a array, 'b) t
 
 (** Carry checked condition out of the option *)
-val option: ('a, 'b) t option -> ('a option, 'b) t
+val option : ('a, 'b) t option -> ('a option, 'b) t
+
+(** [yieldWith f c] returns [x] when [c] is [Ok x] and [f y] if [c] is [Fail y]*)
+val yieldWith : ('b list -> 'a) -> ('a, 'b) t -> 'a
+
+(** [yeild x c] is a shortcut for [yeldWith (fun _ -> x) c] *)
+val yield : 'a -> ('a, 'b) t -> 'a
+
+(** [uncheck c] is a shortcut for [yieldWith (fun _ -> invalid_arg "***uncheck***") c] *)
+val uncheck : ('a, 'b) t -> 'a
 
 (** Prefix synonym for [list] *)
 val ( ?| ) : ('a, 'b) t list -> ('a list, 'b) t
