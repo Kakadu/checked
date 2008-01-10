@@ -49,20 +49,17 @@
 
 (**/**)
 
-#load "pa_extend.cmo";
-#load "q_MLast.cmo";
+open Camlp4.PreCast;
+open Syntax;
 
-open Pcaml;
-
-EXTEND
+EXTEND Gram
   GLOBAL: expr patt;
 
   expr: LEVEL "top" [
     [ "ensure"; items=LIST1 item SEP ","; "in"; body=expr; "end" -> 
          List.fold_right 
              (fun (e, p) b ->
-                let pwel = [(p, None, b)] in
-                let pfun = <:expr< fun [$list:pwel$] >> in
+                let pfun = <:expr< fun [$p$ -> $b$] >> in
                 <:expr< Checked.bind $e$ $pfun$ >>
 	     )
              items

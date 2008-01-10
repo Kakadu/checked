@@ -30,7 +30,7 @@ AM_CONDITIONAL(CAMLP5, test "$have_camlp5" = "yes")
 dnl ... for ocamlfind
 AC_PROG_FINDLIB
 dnl set OCAMLFIND_TRUE an OCAMLFIND_FALSE in Makefile
-AM_CONDITIONAL(OCAMLFIND, test "$have_ocamlfind" = "yes")
+AM_CONDITIONAL(HAVE_OCAMLFIND, test "$have_ocamlfind" = "yes")
 dnl ... for ocamldsort
 AC_PROG_OCAMLDSORT
 
@@ -62,7 +62,6 @@ dnl usage:
 dnl library name, modules to open,
 dnl 1st dir <space> 2nd dir <space> etc., library homepage.
 AC_CHECK_OCAML_MODULE(typeutil, View, ../typeutil/src, http://oops.tepkom.ru/projects/typeutil)
-AC_CHECK_OCAML_MODULE(camlp4, Pcaml)
 dnl more module checks
 dnl AC_CHECK_OCAML_MODULE(libname, Module1 Module2, ../libdir, http://www.example.com/libname)
 AC_SUBST(MODULE_INCLUDES)
@@ -79,13 +78,11 @@ AC_SUBST(ac_aux_dir)
 dnl produce output files
 AC_CONFIG_FILES([
 Makefile
-doc/Makefile
 src/Makefile
+doc/Makefile
 camlp4/Makefile
 camlp4/regression/Makefile
-camlp4/doc/Makefile
 camlp5/Makefile
 camlp5/regression/Makefile
-camlp5/doc/Makefile
 ])
 AC_OUTPUT

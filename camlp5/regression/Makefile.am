@@ -4,13 +4,13 @@ TESTS_ENVIRONMENT = $(srcdir)/test.sh
 
 include $(top_srcdir)/m4/Makefile.am.vars
 
-PARSER_INCLUDES += -I $(top_srcdir)/camlp4
+PARSER_INCLUDES += -I $(top_srcdir)/camlp5
 MODULE_INCLUDES += -I $(top_srcdir)/src
 
 EXTRA_CMA += $(PACKAGE).cma
 
 # OCaml parser call with flags
-AM_P4FLAGS = -pp "$(CAMLP4O) $(PARSER_INCLUDES) pr_o.cmo pa_checked.cmo pa_log.cmo $(LOG)"
+AM_P5FLAGS = -pp "$(CAMLP5O) $(PARSER_INCLUDES) pr_o.cmo pa_checked.cmo pa_log.cmo $(LOG)"
 
 TARGET = 
 
@@ -26,6 +26,6 @@ include $(top_srcdir)/m4/Makefile.am.targets
 
 # Rules to build tests
 %: %.ml
-	$(OCAMLC) $(BFLAGS) $(EXTRA_CMA) $(P4FLAGS) -o $@$(EXEEXT) $<
+	$(OCAMLC) $(BFLAGS) $(EXTRA_CMA) $(P5FLAGS) -o $@$(EXEEXT) $<
 
 include $(top_srcdir)/m4/Makefile.am.rules

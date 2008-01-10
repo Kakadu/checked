@@ -61,7 +61,7 @@ EXTEND
     [ "ensure"; items=LIST1 item SEP ","; "in"; body=expr; "end" -> 
          List.fold_right 
              (fun (e, p) b ->
-                let pwel = [(p, None, b)] in
+                let pwel = [(p, Ploc.VaVal None, b)] in
                 let pfun = <:expr< fun [$list:pwel$] >> in
                 <:expr< Checked.bind $e$ $pfun$ >>
 	     )
