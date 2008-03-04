@@ -1,7 +1,7 @@
 # type in sources here
 if CAMLP5
 SOURCES = pa_checked.ml
-SUBDIRS = regression doc
+SUBDIRS = regression
 else
 SOURCES =
 SUBDIRS =
