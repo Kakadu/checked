@@ -21,11 +21,12 @@ html/style.css:
 	    -I $(top_srcdir)/src -I $(top_srcdir)/camlp5 \
 	    $(top_srcdir)/src/*.mli $(top_srcdir)/src/*.ml && \
 	$(OCAMLDOC) -I +camlp5 $(MODULE_INCLUDES) $(P5FLAGS) -rectypes -dump "$$dump2" \
-	    -pp "$(CAMLP5R) $(PARSER_INCLUDES) pr_o.cmo" \
+	    -pp "$(CAMLP5O) $(PARSER_INCLUDES) pr_o.cmo" \
 	    -I $(top_srcdir)/src -I $(top_srcdir)/camlp5 \
 	    $(top_srcdir)/camlp5/*.ml && \
 	$(OCAMLDOC) -load "$$dump1" -load "$$dump2" -d html -html && \
 	rm -f "$$dump1" "$$dump2"
+	if [ -f $(top_srcdir)/src/style.css ] ; then cp $(top_srcdir)/src/style.css html/ ; fi
 
 # default clean
 clean-am:

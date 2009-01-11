@@ -1,5 +1,5 @@
 (*
- * Pa_checked: a camlp4 extension for Checked module.
+ * Pa_checked: a camlp4/camlp5 extension for Checked module.
  * Copyright (C) 2006-2009
  * Dmitri Boulytchev, St.Petersburg State University
  * 
@@ -15,7 +15,7 @@
  * (enclosed in the file COPYING).
  *)
 
-(** Pa_checked --- a camlp4 syntax extension to work with Checked exception
+(** Pa_checked --- a camlp4/camlp5 syntax extension to work with [Checked] exception
     monad. 
 
     A new [ensure] construct is added at expression level. The construct 
