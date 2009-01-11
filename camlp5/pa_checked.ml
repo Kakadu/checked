@@ -1,6 +1,6 @@
 (*
  * Pa_checked: a camlp4 extension for Checked module.
- * Copyright (C) 2006
+ * Copyright (C) 2006-2008
  * Dmitri Boulytchev, St.Petersburg State University
  * 
  * This software is free software; you can redistribute it and/or
@@ -49,10 +49,10 @@
 
 (**/**)
 
-#load "pa_extend.cmo";
-#load "q_MLast.cmo";
+#load "pa_extend.cmo";;
+#load "q_MLast.cmo";;
 
-open Pcaml;
+open Pcaml
 
 EXTEND
   GLOBAL: expr patt;
@@ -64,7 +64,7 @@ EXTEND
                 let pwel = [(p, Ploc.VaVal None, b)] in
                 let pfun = <:expr< fun [$list:pwel$] >> in
                 <:expr< Checked.bind $e$ $pfun$ >>
-	     )
+             )
              items
              body
     ]

@@ -1,6 +1,6 @@
 (*
  * Pa_checked: a camlp4 extension for Checked module.
- * Copyright (C) 2006
+ * Copyright (C) 2006-2009
  * Dmitri Boulytchev, St.Petersburg State University
  * 
  * This software is free software; you can redistribute it and/or
@@ -49,8 +49,8 @@
 
 (**/**)
 
-open Camlp4.PreCast;
-open Syntax;
+open Camlp4.PreCast
+open Syntax
 
 EXTEND Gram
   GLOBAL: expr patt;
@@ -59,9 +59,9 @@ EXTEND Gram
     [ "ensure"; items=LIST1 item SEP ","; "in"; body=expr; "end" -> 
          List.fold_right 
              (fun (e, p) b ->
-                let pfun = <:expr< fun [$p$ -> $b$] >> in
+                let pfun = <:expr< fun $p$ -> $b$ >> in
                 <:expr< Checked.bind $e$ $pfun$ >>
-	     )
+             )
              items
              body
     ]
