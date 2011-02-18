@@ -65,6 +65,9 @@ val array : ('a, 'b) t array -> ('a array, 'b) t
 (** Carry checked condition out of the option. *)
 val option : ('a, 'b) t option -> ('a option, 'b) t
 
+(** Carry checked condition out of the tuple. *)
+val tuple : ('a, 'b) t * ('c, 'b) t -> ('a * 'c, 'b) t
+
 (** [yieldWith f c] returns [x] when [c] is [Ok x] and [f y] if [c] is [Fail y]. *)
 val yieldWith : ('b list -> 'a) -> ('a, 'b) t -> 'a
 

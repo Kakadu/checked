@@ -84,13 +84,18 @@ let list values =
 
 let ( ?| ) = list
 
+let tuple = function
+| Ok   x, Ok   y -> Ok (x, y)
+| Fail x, Fail y -> Fail (x @ y)
+| Fail x, _ | _, Fail x -> Fail x
+
 let option = function
-  | None -> Ok None
-  | Some x -> x -?-> (fun t -> Some t)
+| None -> Ok None
+| Some x -> x -?-> (fun t -> Some t)
 
 let yieldWith f = function
-  | Ok x -> x
-  | Fail y -> f y
+| Ok x -> x
+| Fail y -> f y
 
 let yield x c = yieldWith (fun _ -> x) c
 
