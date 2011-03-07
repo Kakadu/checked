@@ -34,7 +34,7 @@ module Viewer (A : View.Viewable) (B : View.Viewable) : View.Viewable with type 
 (** Unit: [unit x] returns [Ok x]. *)
 val unit : 'a -> ('a, 'b) t
 
-(** Conventional monadic [bind]. Example:  [bind (map (fun x -> x+1) (Ok 2)) (fun y -> y+3)] 
+(** Conventional monadic [bind]. Example:  [bind (map (fun x -> x+1) (Ok 2)) (fun y -> Ok (y+3))] 
     returns [Ok 6].
  *)
 val bind : ('a, 'c) t -> ('a -> ('b, 'c) t) -> ('b, 'c) t
